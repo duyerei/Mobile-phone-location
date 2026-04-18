@@ -47,10 +47,14 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(b
     except JWTError:
         raise HTTPException(status_code=401, detail="Token已过期或无效")
 
-DB_PATH = "prison.db"
-AUDIO_DIR = "audio_clips"
+# ─── 路径配置（兼容本地开发和 Railway 部署）─────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # server/ 目录
+WEB_DIR  = os.path.join(BASE_DIR, "..", "web")          # web/ 目录
+
+DB_PATH   = os.path.join(BASE_DIR, "prison.db")
+AUDIO_DIR = os.path.join(BASE_DIR, "audio_clips")
 os.makedirs(AUDIO_DIR, exist_ok=True)
-PHOTO_DIR = "photos"
+PHOTO_DIR = os.path.join(BASE_DIR, "photos")
 os.makedirs(PHOTO_DIR, exist_ok=True)
 
 # ─── WebSocket 连接管理 ───────────────────────────────────────────────────────
@@ -605,16 +609,16 @@ async def websocket_device(ws: WebSocket, device_id: str):
 
 # ─── 静态文件（管理端 Web）────────────────────────────────────────────────────
 
-app.mount("/static", StaticFiles(directory="../web/static"), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(WEB_DIR, "static")), name="static")
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_page():
-    with open("../web/login.html", encoding="utf-8") as f:
+    with open(os.path.join(WEB_DIR, "login.html"), encoding="utf-8") as f:
         return f.read()
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
-    with open("../web/index.html", encoding="utf-8") as f:
+    with open(os.path.join(WEB_DIR, "index.html"), encoding="utf-8") as f:
         return f.read()
 
 if __name__ == "__main__":
