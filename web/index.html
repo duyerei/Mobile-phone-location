@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>监所人员定位管理系统</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部导航 -->
+    <header>
+      <div class="logo">🔒 监所定位管理系统 MVP</div>
+      <div class="header-right">
+        <span id="ws-status" class="badge badge-offline">● 未连接</span>
+        <span id="alert-badge" class="badge badge-alert hidden">0 条告警</span>
+        <span id="user-info" class="badge badge-user"></span>
+        <button onclick="showUserMgr()" class="btn-sm">用户管理</button>
+        <button onclick="logout()" class="btn-sm">退出</button>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <!-- 左侧面板 -->
+      <aside class="sidebar">
+        <!-- 设备列表 -->
+        <div class="panel">
+          <div class="panel-title">在押人员设备
+            <button onclick="loadDevices()" class="btn-sm">刷新</button>
+          </div>
+          <div id="device-list" class="device-list"></div>
+        </div>
+
+        <!-- 围栏管理 -->
+        <div class="panel">
+          <div class="panel-title">电子围栏</div>
+          <div class="fence-form">
+            <input id="fence-name" placeholder="围栏名称" />
+            <input id="fence-radius" type="number" placeholder="半径(米)" value="100" />
+            <button onclick="startDrawFence()" class="btn-primary">在地图上点击设置</button>
+          </div>
+          <div id="fence-list" class="fence-list"></div>
+        </div>
+
+        <!-- 告警列表 -->
+        <div class="panel">
+          <div class="panel-title">告警记录</div>
+          <div id="alert-list" class="alert-list"></div>
+        </div>
+      </aside>
+
+      <!-- 地图 -->
+      <div id="map"></div>
+
+      <!-- 右侧详情面板 -->
+      <aside class="detail-panel" id="detail-panel" style="display:none">
+        <div class="panel-title">
+          <span id="detail-name">设备详情</span>
+          <button onclick="closeDetail()" class="btn-sm">✕</button>
+        </div>
+        <div id="detail-info"></div>
+        <button onclick="refreshDeviceLocation()" class="btn-primary" style="margin-top:8px">🔄 刷新位置</button>
+
+        <div class="panel-title" style="margin-top:12px">上报间隔设置</div>
+        <div class="interval-form">
+          <select id="interval-select">
+            <option value="30">30秒（调试）</option>
+            <option value="60">1分钟</option>
+            <option value="300" selected>5分钟</option>
+            <option value="600">10分钟</option>
+            <option value="1800">30分钟</option>
+            <option value="3600">1小时</option>
+          </select>
+          <button onclick="setDeviceInterval()" class="btn-sm">设置</button>
+        </div>
+        <div id="interval-status" class="interval-status"></div>
+        <div class="panel-title" style="margin-top:12px">轨迹回放</div>
+        <button onclick="loadTrack()" class="btn-primary">加载最近轨迹</button>
+        <div class="panel-title" style="margin-top:12px">环境音监听</div>
+        <button onclick="sendAudioCmd()" class="btn-danger">发送录音指令(60s)</button>
+        <div id="audio-list" class="audio-list"></div>
+
+        <div class="panel-title" style="margin-top:12px">📷 远程拍照</div>
+        <div class="camera-btns">
+          <button onclick="sendPhotoCmd('back')" class="btn-camera active" id="btn-back">后置</button>
+          <button onclick="sendPhotoCmd('front')" class="btn-camera" id="btn-front">前置</button>
+        </div>
+        <div id="photo-list" class="photo-list"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="/static/app.js?v=2"></script>
+
+  <!-- 用户管理弹窗 -->
+  <div id="user-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-title">用户管理 <button onclick="closeUserMgr()" class="btn-sm">✕</button></div>
+      <div id="user-list-container"></div>
+      <div class="modal-title" style="margin-top:16px">新增用户</div>
+      <form class="modal-form" onsubmit="addUser(event)">
+        <input id="new-username" placeholder="用户名" autocomplete="username" />
+        <input id="new-password" type="password" placeholder="密码（至少6位）" autocomplete="new-password" />
+        <button type="submit" class="btn-primary">添加</button>
+      </form>
+      <div class="modal-title" style="margin-top:16px">修改密码</div>
+      <form class="modal-form" onsubmit="changePassword(event)">
+        <input id="old-password" type="password" placeholder="原密码" autocomplete="current-password" />
+        <input id="new-pwd" type="password" placeholder="新密码（至少6位）" autocomplete="new-password" />
+        <button type="submit" class="btn-primary">修改</button>
+      </form>
+      <div id="user-msg" style="font-size:12px;margin-top:8px;min-height:18px;"></div>
+    </div>
+  </div>
+</body>
+</html>

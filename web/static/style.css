@@ -1,0 +1,193 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0f1923; color: #c8d6e5; height: 100vh; overflow: hidden; }
+
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 52px;
+  background: #1a2535; border-bottom: 1px solid #2a3a50;
+}
+.logo { font-size: 16px; font-weight: 600; color: #e0eaf5; }
+.header-right { display: flex; gap: 10px; align-items: center; }
+
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+.badge-offline { background: #2a3a50; color: #7a8fa6; }
+.badge-online  { background: #1a4a2a; color: #4caf50; }
+.badge-alert   { background: #4a1a1a; color: #f44336; }
+.hidden { display: none !important; }
+
+.main-layout { display: flex; height: calc(100vh - 52px); }
+
+.sidebar {
+  width: 280px; min-width: 280px;
+  background: #131e2b; border-right: 1px solid #2a3a50;
+  overflow-y: auto; display: flex; flex-direction: column; gap: 0;
+}
+
+.detail-panel {
+  width: 260px; min-width: 260px;
+  background: #131e2b; border-left: 1px solid #2a3a50;
+  overflow-y: auto; padding: 12px;
+}
+
+#map { flex: 1; }
+
+.panel { border-bottom: 1px solid #2a3a50; padding: 12px; }
+.panel-title {
+  font-size: 12px; font-weight: 600; color: #7a9fc0;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+}
+
+/* 设备列表 */
+.device-item {
+  padding: 8px 10px; border-radius: 6px; cursor: pointer;
+  margin-bottom: 4px; background: #1a2535;
+  border: 1px solid transparent; transition: all 0.15s;
+}
+.device-item:hover { border-color: #3a6ea8; }
+.device-item.active { border-color: #4a8fd8; background: #1e3050; }
+.device-item .d-name { font-size: 13px; color: #e0eaf5; font-weight: 500; }
+.device-item .d-meta { font-size: 11px; color: #5a7a9a; margin-top: 2px; }
+.device-item .d-status { float: right; width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; }
+.status-online  { background: #4caf50; box-shadow: 0 0 6px #4caf50; }
+.status-offline { background: #5a7a9a; }
+
+/* 围栏 */
+.fence-form { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.fence-form input { background: #1a2535; border: 1px solid #2a3a50; color: #c8d6e5; padding: 6px 8px; border-radius: 4px; font-size: 12px; }
+.fence-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: #1a2535; border-radius: 4px; margin-bottom: 4px; font-size: 12px; }
+.fence-item .f-name { color: #c8d6e5; }
+.fence-item .f-meta { color: #5a7a9a; font-size: 11px; }
+
+/* 告警 */
+.alert-item { padding: 8px; background: #2a1a1a; border-left: 3px solid #f44336; border-radius: 4px; margin-bottom: 6px; font-size: 12px; }
+.alert-item .a-msg { color: #f0c0c0; }
+.alert-item .a-time { color: #7a5a5a; font-size: 11px; margin-top: 2px; }
+.alert-item.read { background: #1a2535; border-color: #3a5a7a; }
+.alert-item.read .a-msg { color: #7a9fc0; }
+
+/* 详情 */
+.detail-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1a2535; font-size: 12px; }
+.detail-row .label { color: #5a7a9a; }
+.detail-row .value { color: #c8d6e5; }
+
+/* 音频 */
+.audio-item { padding: 6px 8px; background: #1a2535; border-radius: 4px; margin-bottom: 4px; font-size: 12px; }
+.audio-item .a-time { color: #5a7a9a; }
+audio { width: 100%; margin-top: 4px; }
+
+/* 按钮 */
+.btn-sm { background: #2a3a50; border: none; color: #7a9fc0; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+.btn-sm:hover { background: #3a5070; }
+.btn-primary { background: #1a4a8a; border: none; color: #90c0f0; padding: 7px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%; }
+.btn-primary:hover { background: #2a5aa0; }
+.btn-danger { background: #6a1a1a; border: none; color: #f0a0a0; padding: 7px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%; margin-bottom: 8px; }
+.btn-danger:hover { background: #8a2a2a; }
+
+/* 地图覆盖物 */
+.device-marker { background: #4a8fd8; border: 2px solid #fff; border-radius: 50%; width: 14px; height: 14px; }
+.device-label { background: rgba(26,37,53,0.9); color: #e0eaf5; padding: 2px 6px; border-radius: 3px; font-size: 11px; white-space: nowrap; }
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0f1923; }
+::-webkit-scrollbar-thumb { background: #2a3a50; border-radius: 2px; }
+
+/* 照片列表 */
+.photo-list { display: flex; flex-direction: column; gap: 6px; }
+.photo-item { background: #1a2535; border-radius: 4px; overflow: hidden; }
+.photo-item .p-time { font-size: 11px; color: #5a7a9a; padding: 4px 8px; }
+.photo-thumb { width: 100%; display: block; cursor: pointer; border-radius: 0 0 4px 4px; transition: opacity 0.15s; }
+.photo-thumb:hover { opacity: 0.85; }
+.no-data { font-size: 12px; color: #5a7a9a; text-align: center; padding: 12px 0; }
+
+/* 照片全屏预览 */
+.photo-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; cursor: pointer;
+}
+.photo-overlay img { max-width: 90vw; max-height: 90vh; border-radius: 6px; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+.photo-overlay .close-btn {
+  position: absolute; top: 20px; right: 24px;
+  font-size: 24px; color: #fff; cursor: pointer;
+  background: rgba(0,0,0,0.5); width: 36px; height: 36px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+
+/* 照片到达 toast */
+.photo-toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1a4a2a; color: #90f0a0; padding: 10px 16px;
+  border-radius: 6px; font-size: 13px; z-index: 9998;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  animation: fadeInOut 4s ease forwards;
+}
+@keyframes fadeInOut {
+  0%   { opacity: 0; transform: translateY(10px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 删除设备按钮 */
+.btn-del {
+  background: none; border: none; color: #5a3a3a;
+  font-size: 14px; cursor: pointer; padding: 0 4px; line-height: 1;
+  margin-left: auto; flex-shrink: 0;
+}
+.btn-del:hover { color: #f44336; }
+.device-item { display: flex; align-items: center; gap: 6px; }
+.device-item .d-name { flex: 1; }
+
+/* 间隔设置 */
+.interval-form { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+.interval-form select {
+  flex: 1; background: #1a2535; border: 1px solid #2a3a50;
+  color: #c8d6e5; padding: 5px 8px; border-radius: 4px; font-size: 12px;
+}
+.interval-status { font-size: 11px; min-height: 16px; margin-bottom: 4px; }
+
+/* 前后置摄像头切换按钮 */
+.camera-btns { display: flex; gap: 6px; margin-bottom: 8px; }
+.btn-camera {
+  flex: 1; padding: 7px 0; border-radius: 4px; border: 1px solid #3a5070;
+  background: #1a2535; color: #7a9fc0; font-size: 12px; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-camera:hover { background: #2a3a50; }
+.btn-camera.active { background: #6a1a1a; border-color: #8a2a2a; color: #f0a0a0; }
+
+/* 用户信息 */
+.badge-user { background: #1a3a2a; color: #4caf50; }
+
+/* 弹窗 */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center; z-index: 8888;
+}
+.modal-box {
+  background: #131e2b; border: 1px solid #2a3a50; border-radius: 8px;
+  padding: 24px; width: 400px; max-height: 80vh; overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.modal-title {
+  font-size: 12px; font-weight: 600; color: #7a9fc0;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-form { display: flex; flex-direction: column; gap: 8px; }
+.modal-form input {
+  background: #1a2535; border: 1px solid #2a3a50; color: #c8d6e5;
+  padding: 8px 10px; border-radius: 4px; font-size: 13px; outline: none;
+}
+.modal-form input:focus { border-color: #4a8fd8; }
+
+/* 用户列表 */
+.user-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  background: #1a2535; border-radius: 4px; margin-bottom: 4px; font-size: 13px;
+}
+.u-name { flex: 1; color: #e0eaf5; }
+.u-role { font-size: 11px; color: #5a7a9a; background: #2a3a50; padding: 2px 6px; border-radius: 3px; }
+.u-default { font-size: 11px; color: #3a5a7a; }

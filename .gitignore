@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+.venv/
+venv/
+
+# 数据库（包含用户数据，不提交）
+server/prison.db
+
+# 上传的媒体文件（不提交）
+server/photos/
+server/audio_clips/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk
+*.aab
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
